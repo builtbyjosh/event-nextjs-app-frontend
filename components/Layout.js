@@ -1,5 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
+import styles from '../styles/Layout.module.css'
 
 export default function Layout({title, keywords, description, children}) {
   return (
@@ -9,7 +10,10 @@ export default function Layout({title, keywords, description, children}) {
         <meta content={description} name="description" />
         <meta name='keywords' content={keywords} />
       </Head>
+      <div className={styles.container}>
+
       {children}
+      </div>
     </div>
   );
 }
