@@ -1,6 +1,6 @@
-import React from 'react'
-import Link from 'next/link'
-import styles from '../styles/Footer.module.css'
+import React from 'react';
+import Link from 'next/link';
+import styles from '@/styles/Footer.module.css';
 
 export const Footer = () => {
   return (
@@ -10,5 +10,5 @@ export const Footer = () => {
         <Link href={'/about'}>About this project</Link>
       </p>
     </footer>
-  )
-}
+  );
+};
