@@ -1,12 +1,27 @@
-import React from 'react';
-import Link from 'next/link'
 import Layout from '@/components/Layout';
+import EventItem from '@/components/EventItem';
+import { API_URL } from '@/config/index';
 
-export default function EventsPage() {
+export default function EventsPage({ data }) {
+  const {events} = data
+  console.log('EVENTS: ', events);
   return (
     <Layout>
-      <h1>My Events</h1>
-      <Link href="/">Home</Link>
+      <h1>Events</h1>
+      {events.length === 0 && <h3>No Events to show</h3>}
+
+      {events.map((evt) => (
+        <EventItem key={evt.id} evt={evt} />
+      ))}
     </Layout>
   );
+}
+
+export async function getStaticProps() {
+  const res = await fetch(`${API_URL}/api/events`);
+  const data = await res.json();
+  return {
+    props: { data },
+    revalidate: 1,
+  };
 }
