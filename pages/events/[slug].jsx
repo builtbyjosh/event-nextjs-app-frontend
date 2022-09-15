@@ -15,6 +15,9 @@ export default function EventPage({ evt }) {
     console.log('DELETE EVENT');
   };
 
+  const { image, date, time, name, slug, id, performers, description, venue, address } = evt.attributes
+  const thumbnail = image.data.attributes.url
+
   return (
     <Layout>
       <div className={styles.event}>
@@ -29,21 +32,21 @@ export default function EventPage({ evt }) {
           </a>
         </div>
         <span>
-          {evt.date} at {evt.time}
+        {new Date(date).toLocaleDateString('en-US')} at {time}
         </span>
-        <h1>{evt.name}</h1>
+        <h1>{name}</h1>
 
-        {evt.image && (
+        {image && (
           <div className={styles.image}>
-            <Image src={evt.image} height={600} width={960} />
+            <Image src={thumbnail} height={600} width={960} />
           </div>
         )}
         <h3>Performers:</h3>
-        <p>{evt.performers}</p>
+        <p>{performers}</p>
         <h3>Description:</h3>
-        <p>{evt.description}</p>
-        <h3>Venue: {evt.venue}</h3>
-        <p>{evt.address}</p>
+        <p>{description}</p>
+        <h3>Venue: {venue}</h3>
+        <p>{address}</p>
         <Link href='/events'>
           <a className={styles.back}>{'<'} Go Back</a>
         </Link>
@@ -54,9 +57,9 @@ export default function EventPage({ evt }) {
 
 export async function getStaticPaths() {
   const res = await fetch(`${API_URL}/api/events`);
-  const data = await res.json();
-  const paths = data.events.map((evt) => ({
-    params: { slug: evt.slug },
+  const events = await res.json();  
+  const paths = events.data.map((evt) => ({
+    params: { slug: evt.attributes.slug },
   }));
   return {
     paths,
@@ -65,21 +68,22 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params: { slug } }) {
-  const res = await fetch(`${API_URL}/api/events/${slug}`);
+  const res = await fetch(`${API_URL}/api/events?populate=*&filters[slug][$contains]=${slug}`);
   const events = await res.json();
   return {
     props: {
-      evt: events[0],
+      evt: events.data[0],
     },
     revalidate: 1,
   };
 }
 // export async function getServerSideProps({ query: { slug } }) {
-//   const res = await fetch(`${API_URL}/api/events/${slug}`)
+//   const res = await fetch(`${API_URL}/api/events?filters[slug][$contains]=${slug}`)
 //   const events = await res.json()
+//   console.log('EVENT DATA: ', events)
 //   return {
 //     props: {
-//       evt: events[0]
+//       evt: events
 //     },
 //   };
 // }
