@@ -1,4 +1,5 @@
 import { useState } from 'react';
+// import { parseCookies } from '@/helpers/index'
 import Layout from '@/components/Layout';
 import { useRouter } from 'next/router';
 import { API_URL } from '@/config/index';
@@ -30,13 +31,13 @@ export default function AddEventPage() {
     if (hasEmptyFields) {
       toast.error('Please fill in all fields')
     }
-
-    const res = await fetch(`${API_URL}/events`, {
+    const data = { data: { ...values } };
+    const res = await fetch(`${API_URL}/api/events`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json', 
       },
-      body: JSON.stringify(values),
+      body: JSON.stringify(data),
     })
 
     if (!res.ok) {
@@ -45,9 +46,11 @@ export default function AddEventPage() {
         return
       }
       toast.error('Something Went Wrong')
+      console.log('RESONSE: ', res);
     } else {
       const evt = await res.json()
-      router.push(`/events/${evt.slug}`)
+      console.log('EVENT RESPONSE: ', evt)
+      router.push(`/events/${evt.data.attributes.slug}`)
     }
 
   };
@@ -142,12 +145,12 @@ export default function AddEventPage() {
   );
 }
 
-export async function getServerSideProps({ req }) {
-  const { token } = parseCookies(req)
+// export async function getServerSideProps({ req }) {
+//   const { token } = parseCookies(req)
 
-  return {
-    props: {
-      token,
-    },
-  }
-}
+//   return {
+//     props: {
+//       token,
+//     },
+//   }
+// }
