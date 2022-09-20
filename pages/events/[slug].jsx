@@ -16,7 +16,7 @@ export default function EventPage({ evt }) {
   };
 
   const { image, date, time, name, slug, id, performers, description, venue, address } = evt.attributes
-  const thumbnail = image.data.attributes.url
+  const thumbnail = image.data !== null ? image.data.attributes.url : undefined
 
   return (
     <Layout>
