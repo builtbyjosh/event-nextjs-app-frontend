@@ -7,11 +7,14 @@ import Link from 'next/link';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from '@/styles/Form.module.css';
-import moment from 'moment'
+import moment from 'moment';
+import Image from 'next/image';
+import { FaImage } from 'react-icons/fa';
 
-export default function EditEventPage({evt}) {
-  console.log('EVT DETAILS: ', evt)
-  const {name, performers, venue, address, date, time, description} = evt.data.attributes
+export default function EditEventPage({ evt }) {
+  console.log('EVT DETAILS: ', evt);
+  const { name, performers, venue, address, date, time, description } =
+    evt.data.attributes;
   const [values, setValues] = useState({
     name: name,
     performers: performers,
@@ -20,7 +23,12 @@ export default function EditEventPage({evt}) {
     date: date,
     time: time,
     description: description,
-  })
+  });
+  const [imagePreview, setImagePreview] = useState(
+    evt.data.attributes.image
+      ? evt.data.attributes.image.data.attributes.formats.thumbnail.url
+      : null
+  );
 
   const router = useRouter();
 
@@ -143,6 +151,19 @@ export default function EditEventPage({evt}) {
 
         <input type="submit" value="Save Edit Event" className="btn" />
       </form>
+      <h2>Event Image</h2>
+      {imagePreview ? (
+        <Image src={imagePreview} height={100} width={170} />
+      ) : (
+        <div>
+          <p>No Image Uploaded</p>
+        </div>
+      )}
+      <div>
+        <button className="btn-secondary" >
+          <FaImage /> Set Image
+        </button>
+      </div>
     </Layout>
   );
 }
@@ -150,7 +171,7 @@ export default function EditEventPage({evt}) {
 export async function getServerSideProps({ params: { id }, req }) {
   // const { token } = parseCookies(req)
 
-  const res = await fetch(`${API_URL}/api/events/${id}`);
+  const res = await fetch(`${API_URL}/api/events/${id}?populate=*`);
   const evt = await res.json();
 
   return {
