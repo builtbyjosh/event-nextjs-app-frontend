@@ -5,7 +5,8 @@ import styles from '@/styles/EventItem.module.css';
 
 export default function EventItem({ evt }) {
   const { image, date, time, name, slug } = evt.attributes
-  const thumbnail = image.data.attributes.url
+  // const thumbnail = image.data.attributes.url
+  const thumbnail = image.data !== null ? image.data.attributes.url : undefined;
   return (
     <div className={styles.event}>
       <div className={styles.img}>
