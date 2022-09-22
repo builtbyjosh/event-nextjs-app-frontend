@@ -1,6 +1,7 @@
 import { useState } from 'react';
 // import { parseCookies } from '@/helpers/index'
 import Layout from '@/components/Layout';
+import Modal from '@/components/Modal';
 import { useRouter } from 'next/router';
 import { API_URL } from '@/config/index';
 import Link from 'next/link';
@@ -29,6 +30,7 @@ export default function EditEventPage({ evt }) {
       ? evt.data.attributes.image.data.attributes.formats.thumbnail.url
       : null
   );
+  const [showModal, setShowModal] = useState(false);
 
   const router = useRouter();
 
@@ -160,10 +162,13 @@ export default function EditEventPage({ evt }) {
         </div>
       )}
       <div>
-        <button className="btn-secondary" >
+        <button className="btn-secondary" onClick={() => setShowModal(true)}>
           <FaImage /> Set Image
         </button>
       </div>
+      <Modal show={showModal} onClose={() => setShowModal(false)}>
+        IMAGE UPLOAD
+      </Modal>
     </Layout>
   );
 }
