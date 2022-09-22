@@ -1,5 +1,5 @@
 import { useState } from 'react';
-// import { parseCookies } from '@/helpers/index'
+import { parseCookies } from '@/helpers/index'
 import Layout from '@/components/Layout';
 import Modal from '@/components/Modal';
 import { useRouter } from 'next/router';
@@ -11,6 +11,8 @@ import styles from '@/styles/Form.module.css';
 import moment from 'moment';
 import Image from 'next/image';
 import { FaImage } from 'react-icons/fa';
+import ImageUpload from '@/components/ImageUpload';
+import defaultImage from '../../../public/images/event-default.png'
 
 export default function EditEventPage({ evt }) {
   console.log('EVT DETAILS: ', evt);
@@ -26,10 +28,11 @@ export default function EditEventPage({ evt }) {
     description: description,
   });
   const [imagePreview, setImagePreview] = useState(
-    evt.data.attributes.image
+    evt.data.attributes.image.data 
       ? evt.data.attributes.image.data.attributes.formats.thumbnail.url
-      : null
+      : defaultImage
   );
+
   const [showModal, setShowModal] = useState(false);
 
   const router = useRouter();
@@ -72,6 +75,15 @@ export default function EditEventPage({ evt }) {
     console.log(name, ': ', value);
     setValues({ ...values, [name]: value });
   };
+
+  const imageUploaded = async (e) => {
+    const res = await fetch(`${API_URL}/api/events/${evt.data.id}?populate=*`);
+    const evtData = await res.json();
+    console.log('RESPONSE DATA: ', evtData);
+    setImagePreview(evtData.data.attributes.image.data.attributes.formats.thumbnail.url);
+    setShowModal(false);
+  };
+
   return (
     <Layout>
       <Link href={'/events'}>Go Back</Link>
@@ -167,14 +179,14 @@ export default function EditEventPage({ evt }) {
         </button>
       </div>
       <Modal show={showModal} onClose={() => setShowModal(false)}>
-        IMAGE UPLOAD
+        <ImageUpload evtId={evt.id} imageUploaded={imageUploaded} />
       </Modal>
     </Layout>
   );
 }
 
 export async function getServerSideProps({ params: { id }, req }) {
-  // const { token } = parseCookies(req)
+  const { token } = parseCookies(req)
 
   const res = await fetch(`${API_URL}/api/events/${id}?populate=*`);
   const evt = await res.json();
