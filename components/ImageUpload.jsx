@@ -2,28 +2,34 @@ import { useState } from 'react';
 import { API_URL } from '@/config/index';
 import styles from '@/styles/Form.module.css';
 
-export default function ImageUpload({ evtId, imageUploaded, token }) {
+export default function ImageUpload({ evtId, imageUploaded }) {
+  console.log('EVENT ID: ', evtId)
   const [image, setImage] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('SUBMIT EVENT: ', e)
     const formData = new FormData();
-    
+
     formData.append('files', image);
     formData.append('ref', 'api::event.event');
     formData.append('refId', evtId);
-    formData.append('field', 'image');
+    formData.append('field', 'image');    
 
     console.log('FORM DATA: ', formData);
-    debugger
+    for (var key of formData.entries()) {
+      console.log(key[0] + ', ' + key[1]);
+  }
+    
     const res = await fetch(`${API_URL}/api/upload`, {
       method: 'POST',
       // headers: {
-      //   Authorization: `Bearer ${token}`,
-      // },
-      body: formData,
-    });
-
+        //   Authorization: `Bearer ${token}`,
+        // },
+        body: formData,
+      });
+      
+    console.log('FORM DATA AFTER FETCH: ', formData);
     console.log('UPLOAD RES: ', res);
 
     if (res.ok) {

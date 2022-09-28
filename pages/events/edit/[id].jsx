@@ -77,6 +77,7 @@ export default function EditEventPage({ evt }) {
   };
 
   const imageUploaded = async (e) => {
+    console.log('IMAGE UPLOADED EVENT: ', e);
     const res = await fetch(`${API_URL}/api/events/${evt.data.id}?populate=*`);
     const evtData = await res.json();
     console.log('RESPONSE DATA: ', evtData);
@@ -179,7 +180,7 @@ export default function EditEventPage({ evt }) {
         </button>
       </div>
       <Modal show={showModal} onClose={() => setShowModal(false)}>
-        <ImageUpload evtId={evt.id} imageUploaded={imageUploaded} />
+        <ImageUpload evtId={evt.data.id} imageUploaded={imageUploaded} />
       </Modal>
     </Layout>
   );
