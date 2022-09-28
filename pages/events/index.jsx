@@ -17,11 +17,11 @@ export default function EventsPage({ events }) {
   );
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps({ query: { page = 1 } }) {
   const res = await fetch(`${API_URL}/api/events?populate=*&sort=date:ASC`);
   const events = await res.json();
   return {
     props: { events: events.data },
-    revalidate: 1,
+    
   };
 }
