@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from '@/styles/EventItem.module.css';
-import defaultImage from '../../../public/images/event-default.png';
+import defaultImage from '../public/images/event-default.png'
 
 export default function EventItem({ evt }) {
   const { image, date, time, name, slug } = evt.attributes;
