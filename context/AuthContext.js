@@ -10,7 +10,7 @@ export const AuthProvider = ({children}) => {
   const [error, setError] = useState(null)
 
   // Register User
-  const register = async ({user}) => {
+  const register = async (user) => {
     console.log('REGISTRATION DATA: ', {user});
   }
 
